@@ -1,0 +1,28 @@
+<form class="form" method="post" novalidate>
+  <label class="field">
+    <span>Текст сообщения</span>
+    <textarea name="message" rows="5" maxlength="{{ limit }}" required>{{ data.message or '' }}</textarea>
+    <small>От 3 до {{ limit }} символов.</small>
+  </label>
+
+  <label class="field">
+    <span>Тип уведомления</span>
+    <select name="notification_type" required>
+      <option value="" disabled {% if not data.notification_type %}selected{% endif %}>Выберите тип</option>
+      {% for c in channels %}<option value="{{ c }}" {% if c == data.notification_type %}selected{% endif %}>{{ c }}</option>{% endfor %}
+    </select>
+  </label>
+
+  <label class="field">
+    <span>Приоритет</span>
+    <select name="priority" required>
+      {% for p in priorities %}<option value="{{ p }}" {% if p == data.priority %}selected{% endif %}>{{ p }}</option>{% endfor %}
+    </select>
+    <small>Тип и приоритет выбираются независимо: подойдёт любая пара.</small>
+  </label>
+
+  <div class="form-actions">
+    <button class="btn primary" type="submit">{{ submit_label }}</button>
+    <a class="btn ghost" href="{{ cancel_url }}">Отмена</a>
+  </div>
+</form>

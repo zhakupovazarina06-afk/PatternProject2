@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Как работает Bridge{% endblock %}
+{% block content %}
+<div class="page-head"><h1>Как работает Bridge</h1></div>
+
+<section class="card">
+  <h2>Какую задачу решает мост</h2>
+  <p>
+    У уведомления есть два независимых свойства: <b>приоритет</b> (3 варианта) и <b>канал</b> (3 варианта).
+    Без паттерна пришлось бы писать класс на каждую пару, то есть 3 &times; 3 = 9 классов
+    (<code>EmailNormal</code>, <code>SMSEmergency</code> и так далее), а новый канал добавил бы ещё три.
+  </p>
+  <p>
+    С мостом классов 3 + 3: приоритеты наследуют <code>Notification</code>, каналы наследуют <code>Channel</code>,
+    а связывает их поле <code>self.channel</code>. Новый канал или приоритет добавляется одним классом
+    и одной строкой в реестре.
+  </p>
+</section>
+
+<section class="card">
+  <h2>Проверьте на своём тексте</h2>
+  <form class="inline-form" method="post">
+    <textarea name="sample" rows="2" maxlength="500">{{ sample }}</textarea>
+    <button class="btn primary" type="submit">Показать все 9 вариантов</button>
+  </form>
+</section>
+
+<div class="matrix-wrap">
+  <table class="matrix">
+    <thead>
+      <tr><th></th>{% for c in channels %}<th>{{ c }}</th>{% endfor %}</tr>
+    </thead>
+    <tbody>
+      {% for row in matrix %}
+      <tr>
+        <th class="p-{{ priorities[loop.index0] }} rowhead">{{ priorities[loop.index0] }}</th>
+        {% for cell in row %}
+        <td><pre class="payload">{{ cell.payload }}</pre></td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<section class="card">
+  <h2>Где это в коде</h2>
+  <p>
+    Файл <code>patterns/bridge.py</code>: абстракция <code>Notification</code> с наследниками по приоритетам,
+    реализация <code>Channel</code> с наследниками по каналам, функция <code>create_notification()</code>
+    собирает нужную пару. В <code>app.py</code> она вызывается на странице уведомления и на этой странице.
+  </p>
+</section>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Уведомление №{{ row.id }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>Уведомление №{{ row.id }}</h1>
+  <div class="actions">
+    <a class="btn" href="{{ url_for('edit', notification_id=row.id) }}">Изменить</a>
+    <form method="post" action="{{ url_for('delete', notification_id=row.id) }}"
+          onsubmit="return confirm('Удалить это уведомление?');">
+      <button class="btn danger" type="submit">Удалить</button>
+    </form>
+  </div>
+</div>
+
+<section class="card p-{{ row.priority }} stripe">
+  <p class="big">{{ row.message }}</p>
+  <div class="meta">
+    <span class="badge prio p-{{ row.priority }}">{{ row.priority }}</span>
+    <span class="badge chan">{{ row.notification_type }}</span>
+    <span class="date">Создано {{ row.created_at }}</span>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Что получит адресат</h2>
+  <p class="hint">
+    Приоритет <b>{{ delivery.priority }}</b> подготовил текст, канал <b>{{ delivery.channel }}</b>
+    оформил его по своим правилам.
+    {% if delivery.attempts > 1 %}Попыток доставки: {{ delivery.attempts }}.{% endif %}
+  </p>
+  <pre class="payload">{{ delivery.payload }}</pre>
+</section>
+
+<p><a href="{{ url_for('index') }}">Назад к списку</a></p>
+{% endblock %}

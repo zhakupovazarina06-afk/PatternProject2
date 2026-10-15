@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head">
+  <h1>Все уведомления</h1>
+  <a class="btn primary" href="{{ url_for('add') }}">Добавить уведомление</a>
+</div>
+
+<form class="filters" method="get">
+  <label>Тип
+    <select name="type">
+      <option value="">Все</option>
+      {% for c in channels %}<option value="{{ c }}" {% if c == selected_type %}selected{% endif %}>{{ c }}</option>{% endfor %}
+    </select>
+  </label>
+  <label>Приоритет
+    <select name="priority">
+      <option value="">Все</option>
+      {% for p in priorities %}<option value="{{ p }}" {% if p == selected_priority %}selected{% endif %}>{{ p }}</option>{% endfor %}
+    </select>
+  </label>
+  <button class="btn" type="submit">Показать</button>
+  {% if selected_type or selected_priority %}<a class="btn ghost" href="{{ url_for('index') }}">Сбросить</a>{% endif %}
+</form>
+
+{% if rows %}
+<ul class="list">
+  {% for r in rows %}
+  <li class="item p-{{ r.priority }}">
+    <div class="item-main">
+      <a class="item-msg" href="{{ url_for('detail', notification_id=r.id) }}">{{ r.message }}</a>
+      <div class="meta">
+        <span class="badge prio p-{{ r.priority }}">{{ r.priority }}</span>
+        <span class="badge chan">{{ r.notification_type }}</span>
+        <span class="date">{{ r.created_at }}</span>
+      </div>
+    </div>
+    <div class="actions">
+      <a class="btn small" href="{{ url_for('detail', notification_id=r.id) }}">Открыть</a>
+      <a class="btn small" href="{{ url_for('edit', notification_id=r.id) }}">Изменить</a>
+      <form method="post" action="{{ url_for('delete', notification_id=r.id) }}"
+            onsubmit="return confirm('Удалить это уведомление?');">
+        <button class="btn small danger" type="submit">Удалить</button>
+      </form>
+    </div>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<div class="empty">
+  <p>{% if selected_type or selected_priority %}По этому фильтру ничего не найдено.{% else %}Уведомлений пока нет.{% endif %}</p>
+  <a class="btn primary" href="{{ url_for('add') }}">Добавить первое уведомление</a>
+</div>
+{% endif %}
+{% endblock %}

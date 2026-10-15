@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}Новое уведомление{% endblock %}
+{% block content %}
+<div class="page-head"><h1>Новое уведомление</h1></div>
+{% set submit_label = 'Добавить уведомление' %}
+{% set cancel_url = url_for('index') %}
+{% include "_form.html" %}
+{% endblock %}

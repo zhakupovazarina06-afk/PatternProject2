@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}Изменение уведомления{% endblock %}
+{% block content %}
+<div class="page-head"><h1>Изменение уведомления №{{ row.id }}</h1></div>
+{% set submit_label = 'Сохранить изменения' %}
+{% set cancel_url = url_for('detail', notification_id=row.id) %}
+{% include "_form.html" %}
+{% endblock %}
